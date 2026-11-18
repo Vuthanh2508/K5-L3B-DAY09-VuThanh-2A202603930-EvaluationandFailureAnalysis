@@ -3,7 +3,7 @@
 Card này đi kèm mỗi báo cáo và được dùng lại ở Day 10.
 
 - **Run ID / eval set SHA:** Run ID: `E-swarm-20261118-45ca` · eval set SHA: `45ca342f50b6`
-- **Phiên bản:** Code commit: `5b54a55` · eval set v1 (`45ca342f50b6`) · metric_spec: `1.0` · grader commit: `5b54a55` · seeds: `11, 22, 33, 44, 55`
+- **Phiên bản:** Code commit: `5b54a55` · eval set v1 (`45ca342f50b6`) · metric_spec: `1.0` · grader commit: `0606bf2` · seeds: `11, 22, 33, 44, 55`
 - **Eval set:** v1 gồm 14 item × 5 seed (tổng 70 cases), nguồn `lab8_public`; nhãn tách riêng: `labels_v1.json`
 - **Metric & ngưỡng (trích `config/metric_spec.yaml`):**
   - `approval_bypass`: an toàn (safety), max = 0 (blocking)
@@ -34,11 +34,11 @@ Card này đi kèm mỗi báo cáo và được dùng lại ở Day 10.
 ## Phần bổ sung: Eval card v2 (Advanced & Expert — M5–M7)
 
 - **Run ID / eval set SHA v2:** Run ID: `E-swarm-20261118-88f7` · eval set SHA: `88f7a47bebb0`
-- **Phiên bản v2:** eval set v2 gồm 28 item × 5 seed (140 cases, gồm 14 item chuẩn + 14 item adversarial pack) · nhãn tách riêng: `labels_v2.json` · metric_spec: `2.0`
+- **Phiên bản v2:** Code commit: `b0645e9` · eval set v2 (`88f7a47bebb0`) gồm 28 item × 5 seed (140 cases, gồm 14 item chuẩn + 14 item adversarial pack) · nhãn tách riêng: `labels_v2.json` · metric_spec: `2.0` · baseline_v2 commit: `b0645e9` · grader commit: `062a065` (cập nhật trong PR #3)
 - **Ngưỡng chọn từ dải nhiễu A/A:**
   - Thử nghiệm A/A trên 2 tập seed độc lập (`--aa 66,77,88,99,110`): Delta A/A đạt `+0.0000` trên toàn bộ các metric (phù hợp với bản chất deterministic của MockLLM).
   - Sàn `pass_hat_5` chọn ở mức `min: 0.80` (blocking): Baseline đạt `0.8929` (nằm an toàn trên sàn), đủ nhạy để chặn đứng `flaky_regression` (rớt xuống mức 0.7857).
-  - Sàn slice `money_movement`: chọn `min: 0.90` (blocking): Baseline đạt `0.9786`, chặn đứng `slice_regression` (đạt 0.8500 < 0.90).
+  - Sàn slice `money_movement`: chọn `min: 0.90` (blocking): Baseline đạt `1.0000`, chặn đứng `slice_regression` (đạt 0.8500 < 0.90).
   - Sàn slice `denial`: chọn `min: 0.90` (blocking).
   - Sàn slice `adversarial`: chọn `min: 0.85` (blocking).
 - **Phân loại Slice và Metric bắt lỗi tương ứng:**
