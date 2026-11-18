@@ -11,15 +11,6 @@ from __future__ import annotations
 
 import argparse
 import json
-from pathlib import Path
-
-from lab8.console import utf8_stdio
-from lab9 import stats
-from lab9.eval import SPEC, load_spec, per_item
-
-
-import argparse
-import json
 import math
 from pathlib import Path
 
