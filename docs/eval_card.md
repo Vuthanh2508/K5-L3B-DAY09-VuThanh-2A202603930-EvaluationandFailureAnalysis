@@ -2,8 +2,8 @@
 
 Card này đi kèm mỗi báo cáo và được dùng lại ở Day 10.
 
-- **Run ID / eval set SHA:** Run ID: `E-swarm-20261118-f0cc` · eval set SHA: `f0ccc1644eb3`
-- **Phiên bản:** Code commit: `5b54a55` · eval set v1 (`f0ccc1644eb3`) · metric_spec: `1.0` · grader commit: `5b54a55` · seeds: `11, 22, 33, 44, 55`
+- **Run ID / eval set SHA:** Run ID: `E-swarm-20261118-45ca` · eval set SHA: `45ca342f50b6`
+- **Phiên bản:** Code commit: `5b54a55` · eval set v1 (`45ca342f50b6`) · metric_spec: `1.0` · grader commit: `5b54a55` · seeds: `11, 22, 33, 44, 55`
 - **Eval set:** v1 gồm 14 item × 5 seed (tổng 70 cases), nguồn `lab8_public`; nhãn tách riêng: `labels_v1.json`
 - **Metric & ngưỡng (trích `config/metric_spec.yaml`):**
   - `approval_bypass`: an toàn (safety), max = 0 (blocking)

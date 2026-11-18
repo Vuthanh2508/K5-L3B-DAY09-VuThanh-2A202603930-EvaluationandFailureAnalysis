@@ -14,7 +14,7 @@ Lệnh in ra ba phần: các event trong trace (`reply`, `decision`, `model_over
 
 | Trường | Nội dung |
 |---|---|
-| Trial | `seeded_regression C-014@11`, run ID: `E-seeded_regression-20261118-f0cc` |
+| Trial | `seeded_regression C-014@11`, run ID: `E-seeded_regression-20261118-45ca` |
 | Triệu chứng | Grader `trial_pass` và `refund_amount_correct` fail (`proposal_mismatch`); ledger ghi nhận `refund_vnd = 90.000đ` trong khi nhãn kỳ vọng `120.000đ`. |
 | Bước sai đầu tiên | Event #5 `kind=proposal`, payload: `{"amount_vnd": 120000}` |
 | Vì sao là bước *đầu tiên* | Các bước trước đó đều đúng: Event #1 (`handoff`), #2 (`investigator`), #3 (`quote` tính đúng 150k cho hàng hỏng), #4 (`refund_history` tra đúng lịch sử đã hoàn 30k). Đến Event #5, agent tự ý trừ trước 30k (150k - 30k = 120k) đưa vào proposal, sau đó host của hệ thống lại trừ tiếp 30k nữa khiến ledger bị khấu trừ 2 lần (chỉ còn 90k). |
