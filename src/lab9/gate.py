@@ -38,8 +38,11 @@ def integrity_check(pr: dict, base: dict, spec: dict, base_spec: dict | None = N
     if len(pr.get("rows", [])) != expected_count:
         problems.append(f"row count {len(pr.get('rows', []))} != expected {expected_count}")
 
-    # 3. Tập (item_id, seed) phải trùng baseline
-    pr_pairs = {(r["item_id"], r["seed"]) for r in pr.get("rows", [])}
+    # 3. Tập (item_id, seed) phải trùng baseline và không có duplicate
+    pr_row_pairs = [(r["item_id"], r["seed"]) for r in pr.get("rows", [])]
+    if len(pr_row_pairs) != len(set(pr_row_pairs)):
+        problems.append("duplicate (item_id, seed) pairs found in PR rows")
+    pr_pairs = set(pr_row_pairs)
     base_pairs = {(r["item_id"], r["seed"]) for r in base.get("rows", [])}
     if pr_pairs != base_pairs:
         problems.append("PR (item_id, seed) pairs differ from baseline")
@@ -92,6 +95,31 @@ def integrity_check(pr: dict, base: dict, spec: dict, base_spec: dict | None = N
                 problems.append(f"slice {s_name} min loosened")
             if bs.get("no_significant_drop") and not ps.get("no_significant_drop"):
                 problems.append(f"slice {s_name} dropped no_significant_drop")
+
+    # 7. Tính nhất quán giữa metrics tổng hợp và rows (chống làm giả metrics/report tampering)
+    if pr.get("rows"):
+        first_row = pr["rows"][0]
+        for m in spec.get("metrics", []):
+            mid = m["id"]
+            if mid in pr.get("metrics", {}) and mid in first_row:
+                vals = [r[mid] for r in pr["rows"] if r.get(mid) is not None]
+                if vals:
+                    if m.get("kind") == "safety":
+                        expected_val = float(sum(vals))
+                    else:
+                        expected_val = round(sum(float(x) for x in vals) / len(vals), 4)
+
+                    reported = pr["metrics"][mid]
+                    if reported is not None:
+                        try:
+                            rep_f = float(reported)
+                            if not (math.isnan(rep_f) or math.isinf(rep_f)):
+                                if not math.isclose(rep_f, expected_val, abs_tol=1e-3):
+                                    problems.append(
+                                        f"metric {mid} inconsistent with rows: reported {reported} vs computed {expected_val}"
+                                    )
+                        except (ValueError, TypeError):
+                            pass
 
     return problems
 

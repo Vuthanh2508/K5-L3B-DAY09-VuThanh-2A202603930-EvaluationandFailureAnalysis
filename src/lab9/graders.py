@@ -87,11 +87,32 @@ class ReplyMatchesLedger(Evaluator[Any, Trial]):
         for e in events:
             if e.get("kind") == "reply":
                 text = e.get("payload", {}).get("text", "")
-                m = re.search(r"(\d[\d\.]*)\s*đ", text)
+                # 1. Ưu tiên tìm số tiền gắn với hành động hoàn tiền (hoàn, bồi thường, refund...)
+                m_refund = re.search(
+                    r"(?:hoàn|bồi thường|refund)\D*?(\d[\d\.,]*)\s*(?:đ|đồng|dong|vnd)?\b",
+                    text,
+                    re.IGNORECASE,
+                )
+                if m_refund:
+                    cleaned = m_refund.group(1).replace(".", "").replace(",", "")
+                    try:
+                        said = int(cleaned)
+                        if said != ledger_amt:
+                            return EvaluationReason(value=False, reason=f"reply said {said} != ledger {ledger_amt}")
+                        continue
+                    except ValueError:
+                        pass
+
+                # 2. Fallback: tìm số tiền có hậu tố đơn vị tiền tệ (đ, đồng, dong, vnd)
+                m = re.search(r"(\d[\d\.,]*)\s*(?:đ|đồng|dong|vnd)\b", text, re.IGNORECASE)
                 if m:
-                    said = int(m.group(1).replace(".", ""))
-                    if said != ledger_amt:
-                        return EvaluationReason(value=False, reason=f"reply said {said} != ledger {ledger_amt}")
+                    cleaned = m.group(1).replace(".", "").replace(",", "")
+                    try:
+                        said = int(cleaned)
+                        if said != ledger_amt:
+                            return EvaluationReason(value=False, reason=f"reply said {said} != ledger {ledger_amt}")
+                    except ValueError:
+                        pass
         return EvaluationReason(value=True, reason=None)
 
 # Order matters only for display. Names here are the metric ids in config/metric_spec.yaml.
